@@ -149,8 +149,8 @@ class Viewer:
         # )
         buttons = None
         image = viser.theme.TitlebarImage(
-            image_url_light="http://10.128.0.142/aren_icon.svg",
-            image_url_dark="http://10.128.0.142/aren_icon.svg",
+            image_url_light="http://34.132.64.203/aren_icon.svg",
+            image_url_dark="http://34.132.64.203/aren_icon.svg",
             image_alt="Aren.ai Logo",
             href="https://aren.ai/",
         )
