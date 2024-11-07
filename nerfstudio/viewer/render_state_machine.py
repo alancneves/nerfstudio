@@ -132,8 +132,8 @@ class RenderStateMachine(threading.Thread):
 
         # These 2 lines make the control panel's time option independent from the render panel's.
         # When outside of render preview, it will use the control panel's time.
-        if not self.viewer.render_tab_state.preview_render and self.viewer.include_time:
-            camera_state.time = self.viewer.control_panel.time
+        # if not self.viewer.render_tab_state.preview_render and self.viewer.include_time:
+        #     camera_state.time = self.viewer.control_panel.time
         camera = get_camera(camera_state, image_height, image_width)
         camera = camera.to(self.viewer.get_model().device)
         assert isinstance(camera, Cameras)
@@ -298,13 +298,14 @@ class RenderStateMachine(threading.Thread):
                 constant_values=0,
             )
 
-        jpg_quality = (
-            self.viewer.config.jpeg_quality
-            if static_render
-            else 75
-            if self.viewer.render_tab_state.preview_render
-            else 40
-        )
+        # jpg_quality = (
+        #     self.viewer.config.jpeg_quality
+        #     if static_render
+        #     else 75
+        #     if self.viewer.render_tab_state.preview_render
+        #     else 40
+        # )
+        jpg_quality = 80
         self.client.scene.set_background_image(
             selected_output,
             format=self.viewer.config.image_format,
@@ -312,7 +313,7 @@ class RenderStateMachine(threading.Thread):
             depth=depth,
         )
         res = f"{selected_output.shape[1]}x{selected_output.shape[0]}px"
-        self.viewer.stats_markdown.content = self.viewer.make_stats_markdown(None, res)
+        # self.viewer.stats_markdown.content = self.viewer.make_stats_markdown(None, res)
 
     def _calculate_image_res(self, aspect_ratio: float) -> Tuple[int, int]:
         """Calculate the maximum image height that can be rendered in the time budget

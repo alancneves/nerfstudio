@@ -64,16 +64,16 @@ class ControlPanel:
         self._elements_by_tag: DefaultDict[str, List[ViewerElement]] = defaultdict(lambda: [])
         self.default_composite_depth = default_composite_depth
 
-        self._train_speed = ViewerButtonGroup(
-            name="Train Speed",
-            default_value="Mid",
-            options=["Slow", "Mid", "Fast"],
-            cb_hook=lambda han: self._train_speed_cb(),
-        )
+        # self._train_speed = ViewerButtonGroup(
+        #     name="Train Speed",
+        #     default_value="Mid",
+        #     options=["Slow", "Mid", "Fast"],
+        #     cb_hook=lambda han: self._train_speed_cb(),
+        # )
         self._output_render = ViewerDropdown(
             "Output type",
-            "not set",
-            ["not set"],
+            "rgb",
+            ["rgb"],
             cb_hook=lambda han: [self.update_control_panel(), update_output_cb(han), rerender_cb()],
             hint="The output to render",
         )
@@ -120,14 +120,14 @@ class ControlPanel:
             "Max ", 1.0, cb_hook=lambda _: rerender_cb(), hint="Max value of the colormap of the second output"
         )
 
-        self._train_util = ViewerSlider(
-            "Train Util",
-            default_value=0.85,
-            min_value=0.0,
-            max_value=1,
-            step=0.05,
-            hint="Target training utilization, 0.0 is slow, 1.0 is fast. Doesn't affect final render quality",
-        )
+        # self._train_util = ViewerSlider(
+        #     "Train Util",
+        #     default_value=0.85,
+        #     min_value=0.0,
+        #     max_value=1,
+        #     step=0.05,
+        #     hint="Target training utilization, 0.0 is slow, 1.0 is fast. Doesn't affect final render quality",
+        # )
         self._layer_depth = ViewerCheckbox(
             "Composite depth",
             self.default_composite_depth,
@@ -136,7 +136,7 @@ class ControlPanel:
         )
         self._max_res = ViewerSlider(
             "Max res",
-            512,
+            564,
             64,
             2048,
             100,
@@ -153,6 +153,7 @@ class ControlPanel:
             "Background color", (38, 42, 55), cb_hook=lambda _: rerender_cb(), hint="Color of the background"
         )
         self._crop_handle = self.server.scene.add_transform_controls("Crop", depth_test=False, line_width=4.0)
+        self._crop_handle.visible = False
 
         def update_center(han):
             self._crop_handle.position = tuple(p * self.viser_scale_ratio for p in han.value)  # type: ignore
@@ -164,6 +165,7 @@ class ControlPanel:
             cb_hook=lambda e: [rerender_cb(), update_center(e)],
             hint="Center of the crop box",
         )
+        self._crop_center.visible = False
 
         def update_rot(han):
             self._crop_handle.wxyz = vtf.SO3.from_rpy_radians(*han.value).wxyz
@@ -190,42 +192,42 @@ class ControlPanel:
         self._time = ViewerSlider("Time", 0.0, 0.0, 1.0, 0.01, cb_hook=lambda _: rerender_cb(), hint="Time to render")
         self._time_enabled = time_enabled
 
-        self.add_element(self._train_speed)
-        self.add_element(self._train_util)
+        # self.add_element(self._train_speed)
+        # self.add_element(self._train_util)
 
         with self.server.gui.add_folder("Render Options"):
             self.add_element(self._max_res)
-            self.add_element(self._output_render)
-            self.add_element(self._colormap)
-            self.add_element(self._layer_depth)
+            # self.add_element(self._output_render)
+            # self.add_element(self._colormap)
+            # self.add_element(self._layer_depth)
             # colormap options
-            self.add_element(self._invert, additional_tags=("colormap",))
-            self.add_element(self._normalize, additional_tags=("colormap",))
-            self.add_element(self._min, additional_tags=("colormap",))
-            self.add_element(self._max, additional_tags=("colormap",))
+            # self.add_element(self._invert, additional_tags=("colormap",))
+            # self.add_element(self._normalize, additional_tags=("colormap",))
+            # self.add_element(self._min, additional_tags=("colormap",))
+            # self.add_element(self._max, additional_tags=("colormap",))
 
         # split options
-        with self.server.gui.add_folder("Split Screen"):
-            self.add_element(self._split)
+        # with self.server.gui.add_folder("Split Screen"):
+        #     self.add_element(self._split)
 
-            self.add_element(self._split_percentage, additional_tags=("split",))
-            self.add_element(self._split_output_render, additional_tags=("split",))
-            self.add_element(self._split_colormap, additional_tags=("split",))
+        #     self.add_element(self._split_percentage, additional_tags=("split",))
+        #     self.add_element(self._split_output_render, additional_tags=("split",))
+        #     self.add_element(self._split_colormap, additional_tags=("split",))
 
-            self.add_element(self._split_invert, additional_tags=("split_colormap",))
-            self.add_element(self._split_normalize, additional_tags=("split_colormap",))
-            self.add_element(self._split_min, additional_tags=("split_colormap",))
-            self.add_element(self._split_max, additional_tags=("split_colormap",))
+        #     self.add_element(self._split_invert, additional_tags=("split_colormap",))
+        #     self.add_element(self._split_normalize, additional_tags=("split_colormap",))
+        #     self.add_element(self._split_min, additional_tags=("split_colormap",))
+        #     self.add_element(self._split_max, additional_tags=("split_colormap",))
 
-        with self.server.gui.add_folder("Crop Viewport"):
-            self.add_element(self._crop_viewport)
-            # Crop options
-            self.add_element(self._background_color, additional_tags=("crop",))
-            self.add_element(self._crop_center, additional_tags=("crop",))
-            self.add_element(self._crop_scale, additional_tags=("crop",))
-            self.add_element(self._crop_rot, additional_tags=("crop",))
+        # with self.server.gui.add_folder("Crop Viewport"):
+        #     self.add_element(self._crop_viewport)
+        #     # Crop options
+        #     self.add_element(self._background_color, additional_tags=("crop",))
+        #     self.add_element(self._crop_center, additional_tags=("crop",))
+        #     self.add_element(self._crop_scale, additional_tags=("crop",))
+        #     self.add_element(self._crop_rot, additional_tags=("crop",))
 
-        self.add_element(self._time, additional_tags=("time",))
+        # self.add_element(self._time, additional_tags=("time",))
         self._reset_camera = server.gui.add_button(
             label="Reset Up Direction",
             icon=viser.Icon.ARROW_BIG_UP_LINES,
@@ -234,19 +236,19 @@ class ControlPanel:
         )
         self._reset_camera.on_click(self._reset_camera_cb)
 
-    def _train_speed_cb(self) -> None:
-        pass
+    # def _train_speed_cb(self) -> None:
+    #     pass
 
-        """Callback for when the train speed is changed"""
-        if self._train_speed.value == "Fast":
-            self._train_util.value = 0.95
-            self._max_res.value = 256
-        elif self._train_speed.value == "Mid":
-            self._train_util.value = 0.85
-            self._max_res.value = 512
-        elif self._train_speed.value == "Slow":
-            self._train_util.value = 0.5
-            self._max_res.value = 1024
+    #     """Callback for when the train speed is changed"""
+    #     if self._train_speed.value == "Fast":
+    #         self._train_util.value = 0.95
+    #         self._max_res.value = 256
+    #     elif self._train_speed.value == "Mid":
+    #         self._train_util.value = 0.85
+    #         self._max_res.value = 512
+    #     elif self._train_speed.value == "Slow":
+    #         self._train_util.value = 0.5
+    #         self._max_res.value = 1024
 
     def _reset_camera_cb(self, _) -> None:
         for client in self.server.get_clients().values():

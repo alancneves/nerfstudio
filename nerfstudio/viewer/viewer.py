@@ -130,28 +130,29 @@ class Viewer:
         else:
             self.viewer_info = [f"Viewer running locally at: http://{config.websocket_host}:{websocket_port}"]
 
-        buttons = (
-            viser.theme.TitlebarButton(
-                text="Getting Started",
-                icon=None,
-                href="https://nerf.studio",
-            ),
-            viser.theme.TitlebarButton(
-                text="Github",
-                icon="GitHub",
-                href="https://github.com/nerfstudio-project/nerfstudio",
-            ),
-            viser.theme.TitlebarButton(
-                text="Documentation",
-                icon="Description",
-                href="https://docs.nerf.studio",
-            ),
-        )
+        # buttons = (
+        #     viser.theme.TitlebarButton(
+        #         text="Getting Started",
+        #         icon=None,
+        #         href="https://nerf.studio",
+        #     ),
+        #     viser.theme.TitlebarButton(
+        #         text="Github",
+        #         icon="GitHub",
+        #         href="https://github.com/nerfstudio-project/nerfstudio",
+        #     ),
+        #     viser.theme.TitlebarButton(
+        #         text="Documentation",
+        #         icon="Description",
+        #         href="https://docs.nerf.studio",
+        #     ),
+        # )
+        buttons = None
         image = viser.theme.TitlebarImage(
-            image_url_light="https://docs.nerf.studio/_static/imgs/logo.png",
-            image_url_dark="https://docs.nerf.studio/_static/imgs/logo-dark.png",
-            image_alt="NerfStudio Logo",
-            href="https://docs.nerf.studio/",
+            image_url_light="http://10.128.0.142/aren_icon.svg",
+            image_url_dark="http://10.128.0.142/aren_icon.svg",
+            image_alt="Aren.ai Logo",
+            href="https://aren.ai/",
         )
         titlebar_theme = viser.theme.TitlebarConfig(buttons=buttons, image=image)
         self.viser_server.gui.configure_theme(
@@ -166,35 +167,35 @@ class Viewer:
         self.viser_server.on_client_connect(self.handle_new_client)
 
         # Populate the header, which includes the pause button, train cam button, and stats
-        self.pause_train = self.viser_server.gui.add_button(
-            label="Pause Training", disabled=False, icon=viser.Icon.PLAYER_PAUSE_FILLED
-        )
-        self.pause_train.on_click(lambda _: self.toggle_pause_button())
-        self.pause_train.on_click(lambda han: self._toggle_training_state(han))
-        self.resume_train = self.viser_server.gui.add_button(
-            label="Resume Training", disabled=False, icon=viser.Icon.PLAYER_PLAY_FILLED
-        )
-        self.resume_train.on_click(lambda _: self.toggle_pause_button())
-        self.resume_train.on_click(lambda han: self._toggle_training_state(han))
-        if self.train_btn_state == "training":
-            self.resume_train.visible = False
-        else:
-            self.pause_train.visible = False
+        # self.pause_train = self.viser_server.gui.add_button(
+        #     label="Pause Training", disabled=False, icon=viser.Icon.PLAYER_PAUSE_FILLED
+        # )
+        # self.pause_train.on_click(lambda _: self.toggle_pause_button())
+        # self.pause_train.on_click(lambda han: self._toggle_training_state(han))
+        # self.resume_train = self.viser_server.gui.add_button(
+        #     label="Resume Training", disabled=False, icon=viser.Icon.PLAYER_PLAY_FILLED
+        # )
+        # self.resume_train.on_click(lambda _: self.toggle_pause_button())
+        # self.resume_train.on_click(lambda han: self._toggle_training_state(han))
+        # if self.train_btn_state == "training":
+        #     self.resume_train.visible = False
+        # else:
+        #     self.pause_train.visible = False
 
         # Add buttons to toggle training image visibility
-        self.hide_images = self.viser_server.gui.add_button(
-            label="Hide Train Cams", disabled=False, icon=viser.Icon.EYE_OFF, color=None
-        )
-        self.hide_images.on_click(lambda _: self.set_camera_visibility(False))
-        self.hide_images.on_click(lambda _: self.toggle_cameravis_button())
-        self.show_images = self.viser_server.gui.add_button(
-            label="Show Train Cams", disabled=False, icon=viser.Icon.EYE, color=None
-        )
-        self.show_images.on_click(lambda _: self.set_camera_visibility(True))
-        self.show_images.on_click(lambda _: self.toggle_cameravis_button())
-        self.show_images.visible = False
-        mkdown = self.make_stats_markdown(0, "0x0px")
-        self.stats_markdown = self.viser_server.gui.add_markdown(mkdown)
+        # self.hide_images = self.viser_server.gui.add_button(
+        #     label="Hide Train Cams", disabled=False, icon=viser.Icon.EYE_OFF, color=None
+        # )
+        # self.hide_images.on_click(lambda _: self.set_camera_visibility(False))
+        # self.hide_images.on_click(lambda _: self.toggle_cameravis_button())
+        # self.show_images = self.viser_server.gui.add_button(
+        #     label="Show Train Cams", disabled=False, icon=viser.Icon.EYE, color=None
+        # )
+        # self.show_images.on_click(lambda _: self.set_camera_visibility(True))
+        # self.show_images.on_click(lambda _: self.toggle_cameravis_button())
+        # self.show_images.visible = False
+        # mkdown = self.make_stats_markdown(0, "0x0px")
+        # self.stats_markdown = self.viser_server.gui.add_markdown(mkdown)
         tabs = self.viser_server.gui.add_tab_group()
         control_tab = tabs.add_tab("Control", viser.Icon.SETTINGS)
         with control_tab:
@@ -208,13 +209,13 @@ class Viewer:
                 default_composite_depth=self.config.default_composite_depth,
             )
         config_path = self.log_filename.parents[0] / "config.yml"
-        with tabs.add_tab("Render", viser.Icon.CAMERA):
-            self.render_tab_state = populate_render_tab(
-                self.viser_server, config_path, self.datapath, self.control_panel
-            )
+        # with tabs.add_tab("Render", viser.Icon.CAMERA):
+        #     self.render_tab_state = populate_render_tab(
+        #         self.viser_server, config_path, self.datapath, self.control_panel
+        #     )
 
-        with tabs.add_tab("Export", viser.Icon.PACKAGE_EXPORT):
-            populate_export_tab(self.viser_server, self.control_panel, config_path, self.pipeline.model)
+        # with tabs.add_tab("Export", viser.Icon.PACKAGE_EXPORT):
+        #     populate_export_tab(self.viser_server, self.control_panel, config_path, self.pipeline.model)
 
         # Keep track of the pointers to generated GUI folders, because each generated folder holds a unique ID.
         viewer_gui_folders = dict()
@@ -279,39 +280,39 @@ class Viewer:
 
         # Diagnostics for Gaussian Splatting: where the points are at the start of training.
         # This is hidden by default, it can be shown from the Viser UI's scene tree table.
-        if isinstance(pipeline.model, SplatfactoModel):
-            self.viser_server.scene.add_point_cloud(
-                "/gaussian_splatting_initial_points",
-                points=pipeline.model.means.numpy(force=True) * VISER_NERFSTUDIO_SCALE_RATIO,
-                colors=(255, 0, 0),
-                point_size=0.01,
-                point_shape="circle",
-                visible=False,  # Hidden by default.
-            )
+        # if isinstance(pipeline.model, SplatfactoModel):
+        #     self.viser_server.scene.add_point_cloud(
+        #         "/gaussian_splatting_initial_points",
+        #         points=pipeline.model.means.numpy(force=True) * VISER_NERFSTUDIO_SCALE_RATIO,
+        #         colors=(255, 0, 0),
+        #         point_size=0.01,
+        #         point_shape="circle",
+        #         visible=False,  # Hidden by default.
+        #     )
         self.ready = True
 
-    def toggle_pause_button(self) -> None:
-        self.pause_train.visible = not self.pause_train.visible
-        self.resume_train.visible = not self.resume_train.visible
+    # def toggle_pause_button(self) -> None:
+    #     self.pause_train.visible = not self.pause_train.visible
+    #     self.resume_train.visible = not self.resume_train.visible
 
-    def toggle_cameravis_button(self) -> None:
-        self.hide_images.visible = not self.hide_images.visible
-        self.show_images.visible = not self.show_images.visible
+    # def toggle_cameravis_button(self) -> None:
+    #     self.hide_images.visible = not self.hide_images.visible
+    #     self.show_images.visible = not self.show_images.visible
 
-    def make_stats_markdown(self, step: Optional[int], res: Optional[str]) -> str:
-        # if either are None, read it from the current stats_markdown content
-        if step is None:
-            step = int(self.stats_markdown.content.split("\n")[0].split(": ")[1])
-        if res is None:
-            res = (self.stats_markdown.content.split("\n")[1].split(": ")[1]).strip()
-        return f"Step: {step}  \nResolution: {res}"
+    # def make_stats_markdown(self, step: Optional[int], res: Optional[str]) -> str:
+    #     # if either are None, read it from the current stats_markdown content
+    #     if step is None:
+    #         step = int(self.stats_markdown.content.split("\n")[0].split(": ")[1])
+    #     if res is None:
+    #         res = (self.stats_markdown.content.split("\n")[1].split(": ")[1]).strip()
+    #     return f"Step: {step}  \nResolution: {res}"
 
-    def update_step(self, step):
-        """
-        Args:
-            step: the train step to set the model to
-        """
-        self.stats_markdown.content = self.make_stats_markdown(step, None)
+    # def update_step(self, step):
+    #     """
+    #     Args:
+    #         step: the train step to set the model to
+    #     """
+    #     self.stats_markdown.content = self.make_stats_markdown(step, None)
 
     def get_camera_state(self, client: viser.ClientHandle) -> CameraState:
         R = vtf.SO3(wxyz=client.camera.wxyz)
@@ -319,30 +320,37 @@ class Viewer:
         R = torch.tensor(R.as_matrix())
         pos = torch.tensor(client.camera.position, dtype=torch.float64) / VISER_NERFSTUDIO_SCALE_RATIO
         c2w = torch.concatenate([R, pos[:, None]], dim=1)
-        if self.ready and self.render_tab_state.preview_render:
-            camera_type = self.render_tab_state.preview_camera_type
-            camera_state = CameraState(
-                fov=self.render_tab_state.preview_fov,
-                aspect=self.render_tab_state.preview_aspect,
-                c2w=c2w,
-                time=self.render_tab_state.preview_time,
-                camera_type=CameraType.PERSPECTIVE
-                if camera_type == "Perspective"
-                else CameraType.FISHEYE
-                if camera_type == "Fisheye"
-                else CameraType.EQUIRECTANGULAR
-                if camera_type == "Equirectangular"
-                else assert_never(camera_type),
-                idx=self.current_camera_idx,
-            )
-        else:
-            camera_state = CameraState(
-                fov=client.camera.fov,
-                aspect=client.camera.aspect,
-                c2w=c2w,
-                camera_type=CameraType.PERSPECTIVE,
-                idx=self.current_camera_idx,
-            )
+        camera_state = CameraState(
+            fov=client.camera.fov,
+            aspect=client.camera.aspect,
+            c2w=c2w,
+            camera_type=CameraType.PERSPECTIVE,
+            idx=self.current_camera_idx,
+        )
+        # if self.ready and self.render_tab_state.preview_render:
+        #     camera_type = self.render_tab_state.preview_camera_type
+        #     camera_state = CameraState(
+        #         fov=self.render_tab_state.preview_fov,
+        #         aspect=self.render_tab_state.preview_aspect,
+        #         c2w=c2w,
+        #         time=self.render_tab_state.preview_time,
+        #         camera_type=CameraType.PERSPECTIVE
+        #         if camera_type == "Perspective"
+        #         else CameraType.FISHEYE
+        #         if camera_type == "Fisheye"
+        #         else CameraType.EQUIRECTANGULAR
+        #         if camera_type == "Equirectangular"
+        #         else assert_never(camera_type),
+        #         idx=self.current_camera_idx,
+        #     )
+        # else:
+        #     camera_state = CameraState(
+        #         fov=client.camera.fov,
+        #         aspect=client.camera.aspect,
+        #         c2w=c2w,
+        #         camera_type=CameraType.PERSPECTIVE,
+        #         idx=self.current_camera_idx,
+        #     )
         return camera_state
 
     def handle_disconnect(self, client: viser.ClientHandle) -> None:
@@ -482,6 +490,7 @@ class Viewer:
                 return on_click_callback
 
             camera_handle.on_click(create_on_click_callback(idx))
+            camera_handle.visible = False
 
             self.camera_handles[idx] = camera_handle
             self.original_c2w[idx] = c2w
@@ -527,7 +536,7 @@ class Viewer:
                     if camera_state is not None:
                         self.render_statemachines[id].action(RenderAction("step", camera_state))
                 self.update_camera_poses()
-                self.update_step(step)
+                # self.update_step(step)
 
     def update_colormap_options(self, dimensions: int, dtype: type) -> None:
         """update the colormap options based on the current render
